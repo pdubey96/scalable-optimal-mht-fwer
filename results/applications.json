@@ -1,0 +1,1081 @@
+{
+  "camerer": {
+    "names": [
+      "Ackerman et al. (2010)",
+      "Aviezer et al. (2012)",
+      "Balafoutas and Sutter (2012)",
+      "Derex et al. (2013)",
+      "Duncan et al. (2012)",
+      "Gervais and Norenzayan (2012)",
+      "Gneezy et al. (2014)",
+      "Hauser et al. (2014)",
+      "Janssen et al. (2010)",
+      "Karpicke and Blunt (2011)",
+      "Kidd and Castano (2013)",
+      "Kovacs et al. (2010)",
+      "Lee and Schwarz (2010)",
+      "Morewedge et al. (2010)",
+      "Nishi et al. (2015)",
+      "Pyc and Rawson (2010)",
+      "Ramirez and Beilock (2011)",
+      "Rand et al. (2012)",
+      "Shah et al. (2012)",
+      "Sparrow et al. (2011)",
+      "Wilson et al. (2014)"
+    ],
+    "p": [
+      0.024,
+      0.001,
+      0.022,
+      0.003,
+      0.279,
+      0.416,
+      0.001,
+      0.001,
+      0.025,
+      0.006,
+      0.273,
+      0.001,
+      0.455,
+      0.001,
+      0.011,
+      0.089,
+      0.716,
+      0.366,
+      0.15,
+      0.265,
+      0.001
+    ],
+    "baselines": {
+      "Bonferroni": {
+        "n_rejected": 6,
+        "rejected": [
+          1,
+          6,
+          7,
+          11,
+          13,
+          20
+        ]
+      },
+      "Holm": {
+        "n_rejected": 7,
+        "rejected": [
+          1,
+          3,
+          6,
+          7,
+          11,
+          13,
+          20
+        ]
+      },
+      "Hochberg": {
+        "n_rejected": 7,
+        "rejected": [
+          1,
+          3,
+          6,
+          7,
+          11,
+          13,
+          20
+        ]
+      },
+      "Hommel": {
+        "n_rejected": 7,
+        "rejected": [
+          1,
+          3,
+          6,
+          7,
+          11,
+          13,
+          20
+        ]
+      },
+      "Romano-Wolf": {
+        "n_rejected": 7,
+        "rejected": [
+          1,
+          3,
+          6,
+          7,
+          11,
+          13,
+          20
+        ]
+      },
+      "Fisher-closed": {
+        "n_rejected": 6,
+        "rejected": [
+          1,
+          6,
+          7,
+          11,
+          13,
+          20
+        ]
+      },
+      "Stouffer-closed": {
+        "n_rejected": 0,
+        "rejected": []
+      },
+      "Median-closed": {
+        "n_rejected": 0,
+        "rejected": []
+      }
+    },
+    "algorithm": {
+      "mixture theta=1.5": {
+        "l_star": 12,
+        "rejected": [
+          0,
+          1,
+          2,
+          3,
+          6,
+          7,
+          8,
+          9,
+          11,
+          13,
+          14,
+          20
+        ],
+        "sweeps": 24,
+        "seconds": 2357.08300948143,
+        "converged": true,
+        "reason": "residual",
+        "final_residual": 0.0006400000000000017,
+        "res_tol": 0.0006892024376045111,
+        "mu": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.6877422332763672,
+          1.4000415802001953,
+          0.026082992553710938,
+          0.3489971160888672
+        ]
+      },
+      "mixture theta=2.0": {
+        "l_star": 9,
+        "rejected": [
+          1,
+          3,
+          6,
+          7,
+          9,
+          11,
+          13,
+          14,
+          20
+        ],
+        "sweeps": 5,
+        "seconds": 522.3511950969696,
+        "converged": true,
+        "reason": "residual",
+        "final_residual": 0.0003999999999999976,
+        "res_tol": 0.0006892024376045111,
+        "mu": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          2.0995616912841797,
+          0.8019924163818359,
+          0.29082298278808594
+        ]
+      },
+      "mixture theta=2.5": {
+        "l_star": 8,
+        "rejected": [
+          1,
+          3,
+          6,
+          7,
+          9,
+          11,
+          13,
+          20
+        ],
+        "sweeps": 7,
+        "seconds": 482.8831465244293,
+        "converged": true,
+        "reason": "residual",
+        "final_residual": 0.0006300000000000056,
+        "res_tol": 0.0006892024376045111,
+        "mu": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.5410671234130859,
+          1.9670963287353516,
+          0.5212306976318359
+        ]
+      },
+      "mixture theta=3.0": {
+        "l_star": 8,
+        "rejected": [
+          1,
+          3,
+          6,
+          7,
+          9,
+          11,
+          13,
+          20
+        ],
+        "sweeps": 3,
+        "seconds": 197.8961353302002,
+        "converged": true,
+        "reason": "residual",
+        "final_residual": 0.0006000000000000033,
+        "res_tol": 0.0006892024376045111,
+        "mu": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.1191844940185547,
+          0.9547710418701172
+        ]
+      }
+    }
+  },
+  "camerer_sensitivity_1e-10": {
+    "mixture theta=1.5": {
+      "l_star": 12,
+      "matches_upper_bound_run": true
+    },
+    "mixture theta=2.0": {
+      "l_star": 9,
+      "matches_upper_bound_run": true
+    },
+    "mixture theta=2.5": {
+      "l_star": 8,
+      "matches_upper_bound_run": true
+    },
+    "mixture theta=3.0": {
+      "l_star": 8,
+      "matches_upper_bound_run": true
+    }
+  },
+  "sprint": {
+    "names": [
+      "Myocardial infarction",
+      "Non-MI acute coronary",
+      "Stroke",
+      "Heart failure",
+      "Cardiovascular death"
+    ],
+    "p": [
+      0.19,
+      0.99,
+      0.5,
+      0.002,
+      0.005
+    ],
+    "baselines": {
+      "Bonferroni": {
+        "n_rejected": 2,
+        "rejected": [
+          3,
+          4
+        ]
+      },
+      "Holm": {
+        "n_rejected": 2,
+        "rejected": [
+          3,
+          4
+        ]
+      },
+      "Hochberg": {
+        "n_rejected": 2,
+        "rejected": [
+          3,
+          4
+        ]
+      },
+      "Hommel": {
+        "n_rejected": 2,
+        "rejected": [
+          3,
+          4
+        ]
+      },
+      "Romano-Wolf": {
+        "n_rejected": 2,
+        "rejected": [
+          3,
+          4
+        ]
+      },
+      "Fisher-closed": {
+        "n_rejected": 1,
+        "rejected": [
+          3
+        ]
+      },
+      "Stouffer-closed": {
+        "n_rejected": 0,
+        "rejected": []
+      },
+      "Median-closed": {
+        "n_rejected": 0,
+        "rejected": []
+      }
+    },
+    "algorithm": {
+      "mixture theta=2.0": {
+        "l_star": 2,
+        "rejected": [
+          3,
+          4
+        ],
+        "sweeps": 4,
+        "seconds": 5.401420593261719,
+        "converged": true,
+        "reason": "residual",
+        "final_residual": 0.0005600000000000049,
+        "res_tol": 0.0006892024376045111,
+        "mu": [
+          0.0,
+          0.0,
+          0.0,
+          1.6322612762451172,
+          1.724386215209961
+        ]
+      },
+      "mixture theta=2.5": {
+        "l_star": 2,
+        "rejected": [
+          3,
+          4
+        ],
+        "sweeps": 4,
+        "seconds": 5.694664239883423,
+        "converged": true,
+        "reason": "residual",
+        "final_residual": 0.0002400000000000041,
+        "res_tol": 0.0006892024376045111,
+        "mu": [
+          0.0,
+          0.0,
+          0.0,
+          0.8152484893798828,
+          2.158021926879883
+        ]
+      },
+      "mixture theta=3.0": {
+        "l_star": 2,
+        "rejected": [
+          3,
+          4
+        ],
+        "sweeps": 3,
+        "seconds": 5.874468088150024,
+        "converged": true,
+        "reason": "residual",
+        "final_residual": 0.0002699999999999994,
+        "res_tol": 0.0006892024376045111,
+        "mu": [
+          0.0,
+          0.0,
+          0.0,
+          0.23446083068847656,
+          1.8162250518798828
+        ]
+      }
+    },
+    "hierarchical": {
+      "A (strong-effect)": {
+        "l_star": 2,
+        "rejected": [
+          0,
+          1
+        ],
+        "sweeps": 3,
+        "seconds": 1.422290563583374,
+        "converged": true,
+        "reason": "residual",
+        "final_residual": 0.0002500000000000002,
+        "res_tol": 0.0004937104414532875,
+        "mu": [
+          0.4520893096923828,
+          5.57551383972168
+        ],
+        "names": [
+          "Heart failure",
+          "Cardiovascular death"
+        ]
+      },
+      "B (uncertain)": {
+        "l_star": 0,
+        "rejected": [],
+        "sweeps": 3,
+        "seconds": 2.14233660697937,
+        "converged": true,
+        "reason": "residual",
+        "final_residual": 0.0002700000000000029,
+        "res_tol": 0.0004937104414532875,
+        "mu": [
+          0.0,
+          0.9125232696533203,
+          5.00330924987793
+        ],
+        "names": [
+          "Myocardial infarction",
+          "Non-MI acute coronary",
+          "Stroke"
+        ]
+      }
+    }
+  },
+  "osc": {
+    "names": [
+      "Albarracin et al. (2008)",
+      "Fischer et al. (2008)",
+      "Shnabel and Nadler (2008)",
+      "Centerbar et al. (2008)",
+      "Correll (2008)",
+      "Cox et al. (2008)"
+    ],
+    "p": [
+      0.0791,
+      0.1406,
+      0.2338,
+      0.3219,
+      0.3744,
+      0.469
+    ],
+    "N_rep": [
+      105,
+      140,
+      141,
+      113,
+      148,
+      200
+    ],
+    "baselines": {
+      "Bonferroni": {
+        "n_rejected": 0,
+        "rejected": []
+      },
+      "Holm": {
+        "n_rejected": 0,
+        "rejected": []
+      },
+      "Hochberg": {
+        "n_rejected": 0,
+        "rejected": []
+      },
+      "Hommel": {
+        "n_rejected": 0,
+        "rejected": []
+      },
+      "Romano-Wolf": {
+        "n_rejected": 0,
+        "rejected": []
+      },
+      "Fisher-closed": {
+        "n_rejected": 0,
+        "rejected": []
+      },
+      "Stouffer-closed": {
+        "n_rejected": 0,
+        "rejected": []
+      },
+      "Median-closed": {
+        "n_rejected": 0,
+        "rejected": []
+      }
+    },
+    "algorithm": {
+      "beta theta=0.6": {
+        "l_star": 0,
+        "rejected": [],
+        "sweeps": 16,
+        "seconds": 69.51345729827881,
+        "converged": true,
+        "reason": "residual",
+        "final_residual": 0.0006399999999999947,
+        "res_tol": 0.0006892024376045111,
+        "mu": [
+          0.019311904907226562,
+          0.0,
+          0.010919570922851562,
+          0.47354698181152344,
+          0.5434513092041016,
+          0.6612300872802734
+        ]
+      },
+      "mixture theta=2.0": {
+        "l_star": 0,
+        "rejected": [],
+        "sweeps": 4,
+        "seconds": 16.878204345703125,
+        "converged": true,
+        "reason": "residual",
+        "final_residual": 0.00036000000000000615,
+        "res_tol": 0.0006892024376045111,
+        "mu": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.9711017608642578,
+          1.3132572174072266
+        ]
+      }
+    }
+  },
+  "bcg": {
+    "source": "metadat 1.6.0, dat.bcg; Colditz et al. (1994) JAMA 271:698-702",
+    "checksum": "f063d60d1f150aa5429ecce874d9c6de2ec0676beb2537ddb52adccb8838d133",
+    "splits": {
+      "alloc": {
+        "names": [
+          "alternate",
+          "random",
+          "systematic"
+        ],
+        "p": [
+          3.217547330302934e-20,
+          6.941182326470749e-08,
+          1.4389680200141091e-05
+        ],
+        "a_hat": 0.1,
+        "pooled": {
+          "alternate": {
+            "n": 2,
+            "beta": -0.7185553676346006,
+            "se": 0.07800677661604308,
+            "z": -9.21144801523334,
+            "p": 3.217547330302934e-20
+          },
+          "random": {
+            "n": 7,
+            "beta": -0.2945366636147754,
+            "se": 0.054617793813950086,
+            "z": -5.392686944076949,
+            "p": 6.941182326470749e-08
+          },
+          "systematic": {
+            "n": 4,
+            "beta": -0.4133283796034507,
+            "se": 0.09528461013887171,
+            "z": -4.337829361961485,
+            "p": 1.4389680200141091e-05
+          }
+        },
+        "baselines": {
+          "Bonferroni": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Holm": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Hochberg": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Hommel": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Romano-Wolf": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Fisher-closed": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Stouffer-closed": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Median-closed": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          }
+        },
+        "algorithm": {
+          "beta a=0.10": {
+            "l_star": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ],
+            "sweeps": 3,
+            "seconds": 4.956040143966675,
+            "converged": true,
+            "reason": "residual",
+            "final_residual": 0.0004400000000000029,
+            "res_tol": 0.0006892024376045111,
+            "mu": [
+              0.0,
+              0.29892921447753906,
+              1.1615276336669922
+            ]
+          }
+        }
+      },
+      "lat": {
+        "names": [
+          "low_lat",
+          "mid_lat",
+          "high_lat"
+        ],
+        "p": [
+          0.02253984016003417,
+          0.0001511195546041761,
+          2.223144133193613e-43
+        ],
+        "a_hat": 0.1,
+        "pooled": {
+          "low_lat": {
+            "n": 5,
+            "beta": -0.11784161803717087,
+            "se": 0.051658966735968447,
+            "z": -2.2811454715977044,
+            "p": 0.02253984016003417
+          },
+          "mid_lat": {
+            "n": 4,
+            "beta": -0.6700128547689365,
+            "se": 0.1768206711694837,
+            "z": -3.7892224384032853,
+            "p": 0.0001511195546041761
+          },
+          "high_lat": {
+            "n": 4,
+            "beta": -0.9692724580645108,
+            "se": 0.07018707103060057,
+            "z": -13.80984337759189,
+            "p": 2.223144133193613e-43
+          }
+        },
+        "baselines": {
+          "Bonferroni": {
+            "n_rejected": 2,
+            "rejected": [
+              1,
+              2
+            ]
+          },
+          "Holm": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Hochberg": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Hommel": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Romano-Wolf": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Fisher-closed": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Stouffer-closed": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Median-closed": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          }
+        },
+        "algorithm": {
+          "beta a=0.10": {
+            "l_star": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ],
+            "sweeps": 3,
+            "seconds": 4.228417158126831,
+            "converged": true,
+            "reason": "residual",
+            "final_residual": 0.0004400000000000029,
+            "res_tol": 0.0006892024376045111,
+            "mu": [
+              0.0,
+              0.29892921447753906,
+              1.1615276336669922
+            ]
+          }
+        }
+      },
+      "risk": {
+        "names": [
+          "low_risk",
+          "mid_risk",
+          "high_risk"
+        ],
+        "p": [
+          0.0941790749750009,
+          8.375801420495728e-28,
+          1.023981141550668e-24
+        ],
+        "a_hat": 0.1,
+        "pooled": {
+          "low_risk": {
+            "n": 5,
+            "beta": -0.08741773368145009,
+            "se": 0.052228562399137465,
+            "z": -1.6737533959558832,
+            "p": 0.0941790749750009
+          },
+          "mid_risk": {
+            "n": 4,
+            "beta": -1.1671587275271473,
+            "se": 0.10679456076422736,
+            "z": -10.929009110341385,
+            "p": 8.375801420495728e-28
+          },
+          "high_risk": {
+            "n": 4,
+            "beta": -0.8232873866666856,
+            "se": 0.08021132588949667,
+            "z": -10.263979276453918,
+            "p": 1.023981141550668e-24
+          }
+        },
+        "baselines": {
+          "Bonferroni": {
+            "n_rejected": 2,
+            "rejected": [
+              1,
+              2
+            ]
+          },
+          "Holm": {
+            "n_rejected": 2,
+            "rejected": [
+              1,
+              2
+            ]
+          },
+          "Hochberg": {
+            "n_rejected": 2,
+            "rejected": [
+              1,
+              2
+            ]
+          },
+          "Hommel": {
+            "n_rejected": 2,
+            "rejected": [
+              1,
+              2
+            ]
+          },
+          "Romano-Wolf": {
+            "n_rejected": 2,
+            "rejected": [
+              1,
+              2
+            ]
+          },
+          "Fisher-closed": {
+            "n_rejected": 2,
+            "rejected": [
+              1,
+              2
+            ]
+          },
+          "Stouffer-closed": {
+            "n_rejected": 2,
+            "rejected": [
+              1,
+              2
+            ]
+          },
+          "Median-closed": {
+            "n_rejected": 2,
+            "rejected": [
+              1,
+              2
+            ]
+          }
+        },
+        "algorithm": {
+          "beta a=0.10": {
+            "l_star": 2,
+            "rejected": [
+              1,
+              2
+            ],
+            "sweeps": 3,
+            "seconds": 4.460618019104004,
+            "converged": true,
+            "reason": "residual",
+            "final_residual": 0.0004400000000000029,
+            "res_tol": 0.0006892024376045111,
+            "mu": [
+              0.0,
+              0.29892921447753906,
+              1.1615276336669922
+            ]
+          }
+        }
+      },
+      "era": {
+        "names": [
+          "era1",
+          "era2",
+          "era3"
+        ],
+        "p": [
+          1.5796498416638153e-29,
+          0.004018865606209121,
+          1.2422476825370554e-06
+        ],
+        "a_hat": 0.1,
+        "pooled": {
+          "era1": {
+            "n": 5,
+            "beta": -0.8676642156218523,
+            "se": 0.07689538437605513,
+            "z": -11.283696969099733,
+            "p": 1.5796498416638153e-29
+          },
+          "era2": {
+            "n": 4,
+            "beta": -0.4356152804436484,
+            "se": 0.15143002144178627,
+            "z": -2.876677136383491,
+            "p": 0.004018865606209121
+          },
+          "era3": {
+            "n": 4,
+            "beta": -0.24336235120903313,
+            "se": 0.05019045723847678,
+            "z": -4.84877732937782,
+            "p": 1.2422476825370554e-06
+          }
+        },
+        "baselines": {
+          "Bonferroni": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Holm": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Hochberg": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Hommel": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Romano-Wolf": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Fisher-closed": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Stouffer-closed": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          },
+          "Median-closed": {
+            "n_rejected": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ]
+          }
+        },
+        "algorithm": {
+          "beta a=0.10": {
+            "l_star": 3,
+            "rejected": [
+              0,
+              1,
+              2
+            ],
+            "sweeps": 3,
+            "seconds": 5.203091144561768,
+            "converged": true,
+            "reason": "residual",
+            "final_residual": 0.0004400000000000029,
+            "res_tol": 0.0006892024376045111,
+            "mu": [
+              0.0,
+              0.29892921447753906,
+              1.1615276336669922
+            ]
+          }
+        }
+      }
+    }
+  }
+}

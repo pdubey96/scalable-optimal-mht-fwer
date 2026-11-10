@@ -5,7 +5,10 @@ Provides
 --------
 - evaluate_optimal_policy : Power and FWER of D^mu (the optimal algorithm).
 - evaluate_baseline       : Power and FWER of a standard baseline procedure.
-- compare_methods         : Full comparison across Algorithm + four baselines.
+- evaluate_closed_test    : Power and FWER of a closed test on a combination
+                            statistic, vectorised over samples.
+- compare_methods         : Full comparison across Algorithm, the four
+                            rank-based baselines, and the closed tests.
 """
 
 import numpy as np
@@ -13,7 +16,8 @@ import numpy as np
 from general_k.algorithm import coordinate_descent, coordinate_descent_fast
 from general_k.decision import l_star_batch
 from general_k.alternatives import sample_from_g
-from general_k.baselines import bonferroni, holm, hochberg, hommel
+from general_k.baselines import bonferroni, holm, hochberg, hommel, romano_wolf
+from general_k.closed_testing import CLOSED_TESTS
 
 
 # ---------------------------------------------------------------------------
@@ -40,7 +44,8 @@ def evaluate_optimal_policy(mu, g_func, K, n_mc, seed=123):
     mu     : np.ndarray, shape (K,)
         Lagrange multiplier vector.
     g_func : callable
-        Likelihood-ratio density on [0, 1].
+        Likelihood-ratio density on [0, 1] with a callable
+        ``sample(n_samples, rng)`` method.
     K      : int
         Number of hypotheses.
     n_mc   : int
@@ -126,7 +131,8 @@ def evaluate_baseline(method_func, g_func, K, alpha, n_mc, seed=123):
         Receives *unsorted* p-values and returns a 0/1 decision array aligned
         with the input order.
     g_func      : callable
-        Likelihood-ratio density on [0, 1].
+        Likelihood-ratio density on [0, 1] with a callable
+        ``sample(n_samples, rng)`` method.
     K           : int
         Number of hypotheses.
     alpha       : float
@@ -192,6 +198,49 @@ def evaluate_baseline(method_func, g_func, K, alpha, n_mc, seed=123):
 
 
 # ---------------------------------------------------------------------------
+# evaluate_closed_test
+# ---------------------------------------------------------------------------
+
+def evaluate_closed_test(mask_fn, g_func, K, alpha, n_mc, seed=123):
+    """
+    Power and FWER of a closed test, with the same outputs as evaluate_baseline.
+
+    ``mask_fn`` maps (sorted p-values, alpha) to a boolean rejection mask in
+    sorted order, as in ``general_k.closed_testing``.  Unlike the rank-based
+    baselines these do not reduce to a rejection count computed from a
+    threshold, so the mask is mapped back through the sort order; the whole
+    batch is processed at once rather than sample by sample.
+    """
+    rng = np.random.default_rng(seed)
+    results = {}
+
+    # Power: all K hypotheses are alternatives.
+    alt = sample_from_g(g_func, n_mc * K, rng).reshape(n_mc, K)
+    order = np.argsort(alt, axis=1)
+    n_rej = mask_fn(np.take_along_axis(alt, order, axis=1), alpha).sum(axis=1)
+
+    results["pi_K"] = float(np.mean(n_rej / K))
+    results["pi_any"] = float(np.mean(n_rej > 0))
+
+    # FWER: gamma alternatives followed by K - gamma nulls.
+    for gamma in range(K):
+        samples = np.empty((n_mc, K), dtype=float)
+        if gamma > 0:
+            samples[:, :gamma] = sample_from_g(
+                g_func, n_mc * gamma, rng).reshape(n_mc, gamma)
+        if K - gamma > 0:
+            samples[:, gamma:] = rng.uniform(0.0, 1.0, size=(n_mc, K - gamma))
+
+        order = np.argsort(samples, axis=1)
+        mask = mask_fn(np.take_along_axis(samples, order, axis=1), alpha)
+        # A rejection is false when the original column it came from is a null.
+        false_rejection = np.any(mask & (order >= gamma), axis=1)
+        results[f"fwer_{gamma}"] = float(np.mean(false_rejection))
+
+    return results
+
+
+# ---------------------------------------------------------------------------
 # compare_methods
 # ---------------------------------------------------------------------------
 
@@ -201,9 +250,11 @@ def compare_methods(
     alpha=0.05,
     n_algo_samples=100000,
     n_mc=50000,
-    algo_tol=1e-2,
+    algo_tol=1e-3,
     max_iter=100,
     seed=42,
+    bisect_tol=1e-4,
+    f_tol=None,
 ):
     """
     Full comparison of the optimal algorithm vs. standard baselines.
@@ -213,13 +264,15 @@ def compare_methods(
     1. Run coordinate_descent to obtain mu_star.
     2. Evaluate the optimal policy (Algorithm).
     3. Evaluate Bonferroni, Holm, Hochberg, Hommel.
+    4. Evaluate closed testing on Fisher, Stouffer and a median statistic.
 
     Parameters
     ----------
     K               : int
         Number of hypotheses.
     g_func          : callable
-        Likelihood-ratio density on [0, 1].
+        Likelihood-ratio density on [0, 1] with a callable
+        ``sample(n_samples, rng)`` method.
     alpha           : float, optional
         FWER level (default 0.05).
     n_algo_samples  : int, optional
@@ -233,13 +286,16 @@ def compare_methods(
 
     Returns
     -------
-    dict mapping method name (str) -> results dict
-        Each results dict has keys "pi_K", "pi_any", "fwer_0", ..., "fwer_{K-1}".
+    (all_results, diagnostics)
+        all_results maps method name (str) -> results dict with keys
+        "pi_K", "pi_any", "fwer_0", ..., "fwer_{K-1}"; diagnostics is the
+        coordinate-descent diagnostics dict (converged, reason, sweeps,
+        final_residual, res_tol, residuals, deltas, mu).
     """
     # ------------------------------------------------------------------
     # Step 1: find mu_star via coordinate descent
     # ------------------------------------------------------------------
-    mu_star, history = coordinate_descent_fast(
+    mu_star, history, diagnostics = coordinate_descent_fast(
         g_func=g_func,
         K=K,
         alpha=alpha,
@@ -247,13 +303,16 @@ def compare_methods(
         tol=algo_tol,
         max_iter=max_iter,
         seed=seed,
+        bisect_tol=bisect_tol,
+        f_tol=f_tol,
+        return_diagnostics=True,
     )
-
-    n_iters = len(history)
-    converged = (n_iters < 50)  # default max_iter in coordinate_descent is 50
+    diagnostics["mu"] = mu_star.tolist()
 
     print(f"mu_star = {mu_star}")
-    print(f"Coordinate descent: {n_iters} iteration(s), converged={converged}")
+    print(f"Coordinate descent: {diagnostics['sweeps']} sweep(s), "
+          f"converged={diagnostics['converged']} ({diagnostics['reason']}), "
+          f"residual={diagnostics['final_residual']:.2e}")
 
     # ------------------------------------------------------------------
     # Step 2: evaluate Algorithm
@@ -276,6 +335,7 @@ def compare_methods(
         "Holm":       holm,
         "Hochberg":   hochberg,
         "Hommel":     hommel,
+        "Romano-Wolf": romano_wolf,
     }
 
     for name, method_func in baseline_methods.items():
@@ -288,4 +348,17 @@ def compare_methods(
             seed=seed + 1,
         )
 
-    return all_results
+    # ------------------------------------------------------------------
+    # Step 4: evaluate the closed tests
+    # ------------------------------------------------------------------
+    for name, mask_fn in CLOSED_TESTS.items():
+        all_results[name] = evaluate_closed_test(
+            mask_fn=mask_fn,
+            g_func=g_func,
+            K=K,
+            alpha=alpha,
+            n_mc=n_mc,
+            seed=seed + 1,
+        )
+
+    return all_results, diagnostics

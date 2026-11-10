@@ -16,3 +16,6 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+# Outputs of new runs (the drivers write below code/reproduced/ by default)
+code/reproduced/

@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68.0", "wheel"]
+requires = ["setuptools>=77.0.3", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,7 +7,10 @@ name = "optimal-fwer"
 version = "0.1.0"
 description = "Most powerful test with exact family-wise error rate control for K exchangeable hypotheses"
 readme = "README.md"
-license = {text = "MIT"}
+license = "MIT"
+license-files = ["LICENSE"]
+# This floor is for ordinary package use. The pinned reproduction environment
+# in requirements.txt requires Python >=3.11 and used Python 3.14.3.
 requires-python = ">=3.10"
 authors = [
     {name = "Prasanjit Dubey", email = "pdubey31@gatech.edu"},
@@ -24,7 +27,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Mathematics",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
@@ -34,7 +36,9 @@ dependencies = [
 
 [project.optional-dependencies]
 plots = ["matplotlib>=3.7"]
-dev = ["pytest>=7.0", "matplotlib>=3.7"]
+# PyMuPDF measures the produced figures in tests/test_figure_font_sizes.py,
+# which enforces the journal's 10pt floor on in-figure text.
+dev = ["pytest>=7.0", "matplotlib>=3.7", "pymupdf>=1.23"]
 
 [project.urls]
 Repository = "https://github.com/pdubey96/scalable-optimal-mht-fwer"

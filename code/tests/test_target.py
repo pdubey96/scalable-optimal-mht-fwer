@@ -334,13 +334,9 @@ class TestSampleFromG:
         samples = sample_from_g(g, 500, rng)
         assert np.all(samples >= 0.0) and np.all(samples <= 1.0)
 
-    def test_constant_g_uniform_distribution(self):
-        """
-        With g=constant(c), the rejection sampler should produce U(0,1) samples
-        (acceptance probability is constant -> uniform).  Check mean ~ 0.5.
-        """
-        g = constant_g(2.0)
+    def test_plain_callable_requires_explicit_sampler(self):
+        """A density callable without a sampler fails before drawing samples."""
+        g = lambda u: np.ones_like(np.asarray(u, dtype=float))
         rng = make_rng(32)
-        samples = sample_from_g(g, 5_000, rng)
-        mean = float(np.mean(samples))
-        assert abs(mean - 0.5) < 0.05, f"Mean {mean:.4f} far from 0.5 for uniform draw"
+        with pytest.raises(TypeError, match=r"\.sample\(n_samples, rng\)"):
+            sample_from_g(g, 5_000, rng)

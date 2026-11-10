@@ -1,0 +1,33 @@
+# Direct package versions used to produce the released results, recorded
+# 12 August 2026 and cross-checked against results/environment.json.
+#
+# pyproject.toml declares floors, which is the right thing for anyone installing
+# the package to use. This file is the other thing: the pinned set that
+# most closely reproduces the numbers in the paper. Install it when the goal is
+# to reproduce rather than to use. This file requires Python >=3.11 because the
+# pinned NumPy and SciPy releases do; the reference results used Python 3.14.3:
+#
+#     python -m pip install -r requirements.txt
+#     python -m pip install -e .
+#     python -m general_k.environment --check-packages
+#
+# The last line verifies the numerically relevant package versions while
+# allowing a different Python or operating-system environment. Use the stricter
+# `--check` mode to report Python, package, OS, and architecture drift together.
+#
+# Results are deterministic given the seeds documented in README.md;
+# floating-point summation order can differ across BLAS builds, so expect
+# agreement to many significant figures rather than bitwise identity on a
+# different platform. Transitive plotting and test dependencies are resolved by
+# pip and do not enter the paper's numerical estimates.
+
+numpy==2.4.3
+scipy==1.17.1
+
+# Figures. Required by the plot_*.py drivers and by run_scaling_convergence.py.
+matplotlib==3.10.8
+
+# Tests only. pymupdf measures the rendered figures in
+# tests/test_figure_font_sizes.py, which enforces the journal's 10pt floor.
+pytest==9.0.2
+pymupdf==1.27.2.2

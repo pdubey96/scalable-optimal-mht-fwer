@@ -31,7 +31,7 @@ def prepare_samples(gamma, g_func, K, n_samples, rng):
     Pre-draw labeled p-value samples for use in target_function during bisection.
 
     Layout of each row before sorting:
-        positions 0 .. gamma-1   : alternative p-values (drawn from g via rejection sampling)
+        positions 0 .. gamma-1   : alternative p-values (drawn by g_func.sample)
         positions gamma .. K-1   : null p-values (drawn from U(0,1))
 
     After sorting each row, ``sort_indices`` records the original column each
@@ -43,7 +43,8 @@ def prepare_samples(gamma, g_func, K, n_samples, rng):
     gamma    : int
         Number of alternative hypotheses (0 <= gamma <= K).
     g_func   : callable
-        Likelihood-ratio density on [0, 1].
+        Likelihood-ratio density on [0, 1] exposing a callable
+        ``sample(n_samples, rng)`` method.
     K        : int
         Total number of hypotheses.
     n_samples : int
@@ -103,7 +104,8 @@ def sample_and_estimate_fwer(gamma, mu, g_func, K, n_samples, rng):
     mu : np.ndarray, shape (K,)
         Lagrange multipliers.
     g_func   : callable
-        Likelihood-ratio density on [0, 1].
+        Likelihood-ratio density on [0, 1] exposing a callable
+        ``sample(n_samples, rng)`` method.
     K        : int
         Total number of hypotheses.
     n_samples : int

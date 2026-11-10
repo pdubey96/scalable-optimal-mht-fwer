@@ -19,13 +19,26 @@ import numpy as np
 from general_k.coefficients import compute_R, compute_R_batch, compute_R_from_precomputed
 
 
+def _argmax_largest(obj: np.ndarray) -> int:
+    """Index of the maximum of a 1-D array, ties broken by the LARGEST index
+    (the tie-breaking convention stated in the paper; ties occur only on a
+    Lebesgue-null set of p-value vectors)."""
+    return obj.shape[0] - 1 - int(np.argmax(obj[::-1]))
+
+
+def _argmax_largest_batch(obj: np.ndarray) -> np.ndarray:
+    """Row-wise argmax of a 2-D array, ties broken by the largest index."""
+    return obj.shape[1] - 1 - np.argmax(obj[:, ::-1], axis=1)
+
+
 def optimal_l_star(mu: np.ndarray, u_sorted: np.ndarray, g_func, K: int) -> int:
     """
     Compute l* = argmax_{0 <= l <= K} sum_{i=1}^{l} R_i(mu, u).
 
     The objective at l=0 is defined as 0 (empty sum). We evaluate the
-    cumulative sum of R_i for l = 1, ..., K and pick the l that maximises it,
-    keeping l=0 as the default when no positive gain exists.
+    cumulative sum of R_i for l = 1, ..., K and pick the l that maximizes it
+    (ties broken by the largest maximizer, matching the paper), keeping l=0
+    as the default when no positive gain exists.
 
     Parameters
     ----------
@@ -47,7 +60,7 @@ def optimal_l_star(mu: np.ndarray, u_sorted: np.ndarray, g_func, K: int) -> int:
     obj[0] = 0.0
     obj[1:] = cumsum
 
-    return int(np.argmax(obj))
+    return _argmax_largest(obj)
 
 
 def l_star_batch(
@@ -83,7 +96,7 @@ def l_star_batch(
     obj[:, 0] = 0.0
     obj[:, 1:] = cumsum
 
-    return np.argmax(obj, axis=1).astype(int)
+    return _argmax_largest_batch(obj).astype(int)
 
 
 def l_star_from_precomputed(mu, a_batch, b_coeff):
@@ -98,7 +111,7 @@ def l_star_from_precomputed(mu, a_batch, b_coeff):
     obj = np.empty((n_samples, K + 1))
     obj[:, 0] = 0.0
     obj[:, 1:] = cumsum
-    return np.argmax(obj, axis=1).astype(int)
+    return _argmax_largest_batch(obj).astype(int)
 
 
 def decisions(mu: np.ndarray, u_sorted: np.ndarray, g_func, K: int) -> np.ndarray:

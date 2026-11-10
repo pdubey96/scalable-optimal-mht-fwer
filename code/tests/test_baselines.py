@@ -6,12 +6,13 @@ Covers:
 - holm: step-down; stops at first non-rejection
 - hochberg: step-up; reject all at once when p_{(i)} <= alpha/(K-i+1)
 - hommel: at least as powerful as Holm (dominates Holm)
+- romano_wolf: stepdown min-P under independence; dominates Holm; exact FWER
 """
 
 import numpy as np
 import pytest
 
-from general_k.baselines import bonferroni, holm, hochberg, hommel
+from general_k.baselines import bonferroni, holm, hochberg, hommel, romano_wolf
 
 
 # ---------------------------------------------------------------------------
@@ -284,3 +285,130 @@ class TestHommel:
         # Specific: all three should be rejected in both cases
         assert np.all(D_sorted   == 1)
         assert np.all(D_unsorted == 1)
+
+
+# ---------------------------------------------------------------------------
+# Romano-Wolf
+# ---------------------------------------------------------------------------
+
+class TestRomanoWolf:
+    """Stepdown min-P under independence, i.e. the stepdown Sidak thresholds."""
+
+    def test_thresholds_are_the_sidak_sequence(self):
+        """
+        K=3, alpha=0.05.  Step i leaves m = K-i+1 hypotheses, so the thresholds
+        are 1-(1-alpha)^(1/m) = 0.016952, 0.025321, 0.05.
+        """
+        alpha = 0.05
+        expected = [1 - (1 - alpha) ** (1 / m) for m in (3, 2, 1)]
+        # Just below each threshold: everything is rejected.
+        p = np.array([expected[0] - 1e-9, expected[1] - 1e-9, expected[2] - 1e-9])
+        assert _decisions(romano_wolf(p, alpha)) == [1, 1, 1]
+        # Smallest p-value just above the first threshold: the stepdown stops
+        # at step one and rejects nothing.
+        p = np.array([expected[0] + 1e-9, 0.5, 0.9])
+        assert _decisions(romano_wolf(p, alpha)) == [0, 0, 0]
+
+    def test_strictly_beats_holm_in_the_gap(self):
+        """
+        p_(1) = 0.0168 sits between Holm's alpha/3 = 0.016667 and Romano-Wolf's
+        0.016952, so Holm rejects nothing and Romano-Wolf rejects one.  The
+        second step then stops it: 0.026 > 0.025321.
+        """
+        p = np.array([0.0168, 0.026, 0.9])
+        assert _decisions(holm(p, alpha=0.05)) == [0, 0, 0]
+        assert _decisions(romano_wolf(p, alpha=0.05)) == [1, 0, 0]
+
+    @pytest.mark.parametrize("K", [2, 3, 4, 6, 9])
+    def test_dominates_holm(self, K):
+        """
+        1-(1-alpha)^(1/m) >= alpha/m for every m, so Romano-Wolf rejects a
+        superset of Holm's rejections on every draw.
+        """
+        rng = np.random.default_rng(101 + K)
+        for row in rng.uniform(0.0, 1.0, size=(500, K)):
+            d_holm = holm(row, alpha=0.05)
+            d_rw = romano_wolf(row, alpha=0.05)
+            assert np.all(d_rw >= d_holm)
+
+    def test_enforces_monotone_adjusted_p_values(self):
+        """
+        The raw adjusted sequence can decrease: at K=3, p=(0.02, 0.021, 0.9)
+        gives 1-0.98^3 = 0.0588 then 1-0.979^2 = 0.0416.  The running maximum
+        keeps the second from being rejected while the first is not.
+        """
+        p = np.array([0.02, 0.021, 0.9])
+        assert 1 - (1 - p[1]) ** 2 < 1 - (1 - p[0]) ** 3    # the raw sequence dips
+        assert _decisions(romano_wolf(p, alpha=0.05)) == [0, 0, 0]
+
+    def test_rejections_are_a_leading_block(self):
+        """A stepdown never rejects a larger p-value while retaining a smaller."""
+        rng = np.random.default_rng(23)
+        for row in rng.uniform(0.0, 0.06, size=(300, 5)):
+            d = romano_wolf(row, alpha=0.05)
+            rejected_p = row[d == 1]
+            retained_p = row[d == 0]
+            if rejected_p.size and retained_p.size:
+                assert rejected_p.max() < retained_p.min()
+
+    def test_fwer_is_exactly_alpha_under_the_complete_null(self):
+        """
+        Under the complete null the procedure rejects something iff the smallest
+        of K independent uniforms falls below 1-(1-alpha)^(1/K), an event of
+        probability exactly alpha.  200,000 draws give a standard error of
+        0.0005, so 0.003 is a wide tolerance.
+        """
+        alpha, K, n = 0.05, 4, 200_000
+        rng = np.random.default_rng(2026)
+        p = rng.uniform(0.0, 1.0, size=(n, K))
+        any_rejection = np.array([romano_wolf(row, alpha).sum() > 0 for row in p])
+        assert abs(any_rejection.mean() - alpha) < 0.003
+
+    def test_single_hypothesis(self):
+        """K=1: m=1, so the threshold is alpha itself."""
+        assert _decisions(romano_wolf(np.array([0.04]), 0.05)) == [1]
+        assert _decisions(romano_wolf(np.array([0.06]), 0.05)) == [0]
+
+    def test_unsorted_input_preserved(self):
+        """Decisions follow the hypotheses, not the sort order."""
+        p = np.array([0.9, 0.0001, 0.02])
+        assert _decisions(romano_wolf(p, alpha=0.05)) == [0, 1, 1]
+
+    def test_output_shape_and_type(self):
+        p = np.array([0.01, 0.04, 0.1])
+        D = romano_wolf(p, alpha=0.05)
+        assert isinstance(D, np.ndarray)
+        assert D.shape == p.shape
+        assert set(D.tolist()).issubset({0, 1})
+
+    def test_reproduces_the_submitted_R_implementation(self):
+        """
+        The earlier K=3 version of this work computed this in R, as
+        ``romano_wolf_stepdown_indep`` in its simulation scripts.  The Python
+        code must not silently redefine a comparator it carries forward, so
+        the R function is transcribed
+        literally here and required to agree exactly.  Checked against
+        statsmodels' ``holm-sidak`` as well when writing this, also exactly.
+        """
+        def submitted_R(p, alpha):
+            order = np.argsort(p)
+            ps = p[order]
+            m = len(ps)
+            padj = np.empty(m)
+            for i in range(1, m + 1):
+                padj[i - 1] = 1 - (1 - ps[i - 1]) ** (m - i + 1)
+            padj = np.maximum.accumulate(padj)
+            rej = np.zeros(m, dtype=int)
+            rej[order] = (padj <= alpha).astype(int)
+            return rej
+
+        rng = np.random.default_rng(0)
+        for K in (1, 2, 3, 4, 6, 12, 21):
+            draws = np.concatenate([
+                rng.uniform(0.0, 1.0, size=(200, K)),        # mostly null
+                rng.uniform(0.0, 0.06, size=(200, K)),       # signal-rich
+            ])
+            for row in draws:
+                assert np.array_equal(
+                    romano_wolf(row, 0.05), submitted_R(row, 0.05)
+                ), (K, row)

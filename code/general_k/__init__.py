@@ -15,7 +15,7 @@ from general_k.alternatives import (
     student_t_g,
     beta_g,
 )
-from general_k.baselines import bonferroni, holm, hochberg, hommel
+from general_k.baselines import bonferroni, holm, hochberg, hommel, romano_wolf
 
 __version__ = "0.1.0"
 __all__ = [
@@ -32,4 +32,5 @@ __all__ = [
     "holm",
     "hochberg",
     "hommel",
+    "romano_wolf",
 ]

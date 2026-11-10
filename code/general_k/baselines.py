@@ -12,7 +12,8 @@ The output is aligned with the *original* input order.
 
 References
 ----------
-Bonferroni (1936); Holm (1979); Hochberg (1988); Hommel (1988).
+Bonferroni (1936); Holm (1979); Hochberg (1988); Hommel (1988);
+Romano and Wolf (2005).
 """
 
 import numpy as np
@@ -183,3 +184,57 @@ def hommel(p_values: np.ndarray, alpha: float) -> np.ndarray:
 
     threshold = alpha / j_star
     return (p_values <= threshold).astype(int)
+
+
+# ---------------------------------------------------------------------------
+# Romano-Wolf
+# ---------------------------------------------------------------------------
+
+def romano_wolf(p_values: np.ndarray, alpha: float) -> np.ndarray:
+    """
+    Romano-Wolf (2005) stepdown, min-P statistic, independence closed form.
+
+    Algorithm
+    ---------
+    The general procedure walks down the sorted p-values and compares each
+    against the alpha-quantile of the minimum p-value over the hypotheses still
+    under test, taken under the joint null.  That quantile is normally obtained
+    by resampling; under the independent product model assumed throughout this
+    paper it is available in closed form, because the minimum of ``m``
+    independent U(0, 1) variables has c.d.f. ``1 - (1 - p)^m``.  Step ``i``
+    therefore has ``m = K - i + 1`` hypotheses left and adjusted p-value
+
+        p~_(i) = 1 - (1 - p_(i))^(K - i + 1),
+
+    enforced monotone by a running maximum and compared against ``alpha``.
+
+    Because the running maximum makes the adjusted sequence non-decreasing, the
+    rejected set is the leading run of the sorted p-values, so this is the
+    stepdown Sidak procedure.  It is uniformly at least as powerful as Holm:
+    ``1 - (1 - alpha)^(1/m) >= alpha / m`` for every ``m >= 1``, with equality
+    only at ``m = 1``.  The gain is the price Holm pays for holding under
+    arbitrary dependence, which the model here does not impose.
+
+    Using the exact quantile rather than a resampled one makes the procedure
+    deterministic, so it needs no seed and adds no Monte Carlo error of its own
+    to the comparison.
+
+    Parameters
+    ----------
+    p_values : 1-D array of p-values, length K
+    alpha    : FWER level
+
+    Returns
+    -------
+    np.ndarray of int (0/1), aligned with original input order
+    """
+    K = len(p_values)
+    sort_idx = np.argsort(p_values)
+    sorted_p = p_values[sort_idx]
+
+    m = K - np.arange(K)                     # hypotheses left at step i: K..1
+    p_adj = np.maximum.accumulate(1.0 - (1.0 - sorted_p) ** m)
+
+    decisions = np.zeros(K, dtype=int)
+    decisions[sort_idx[p_adj <= alpha]] = 1
+    return decisions
